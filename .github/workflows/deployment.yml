@@ -19,5 +19,5 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12          # 6
         with:
           heroku_api_key: "90e34b09-f742-47af-add9-1a69180d96fd"
-          heroku_app_name: 
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_app_name: "hacker-news-clone-typescript"
+          heroku_email: "varghese.noble230196@gmail.com"
