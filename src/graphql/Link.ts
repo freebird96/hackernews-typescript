@@ -1,4 +1,6 @@
-import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
+import { enumType, extendType, inputObjectType, intArg, nonNull, objectType, stringArg, arg, list } from "nexus";
+import { Prisma } from "@prisma/client"
+
 
 export const Link = objectType({
     name: "Link", // 1 
@@ -27,14 +29,44 @@ export const Link = objectType({
 
 
 
-export const LinkQuery = extendType({  // 2
+export const LinkQuery = extendType({
     type: "Query",
     definition(t) {
-        t.nonNull.list.nonNull.field("feed", {   // 3
-            type: "Link",
-            resolve(parent, args, context, info) {    // 4
-                console.log("Fetching the results from the DB");
-                return context.prisma.link.findMany();
+        t.nonNull.field("feed", {
+            type: "Feed",
+            args: {
+                filter: stringArg(),
+                skip: intArg(),
+                take: intArg(),
+                orderBy: arg({ type: list(nonNull(LinkOrderByInput)) }),
+            },
+            async resolve(parent, args, context) {
+                const where = args.filter
+                    ? {
+                        OR: [
+                            { description: { contains: args.filter } },
+                            { url: { contains: args.filter } },
+                        ],
+                    }
+                    : {};
+                const links = await context.prisma.link.findMany({
+                    where,
+                    skip: args?.skip as number | undefined,
+                    take: args?.take as number | undefined,
+                    orderBy: args?.orderBy as
+                        | Prisma.Enumerable<Prisma.LinkOrderByWithRelationInput>
+                        | undefined,
+                });
+
+                const count = await context.prisma.link.count({ where });
+                const id = `main-feed:${JSON.stringify(args)}`;
+
+                return {  // 4
+                    links,
+                    count,
+                    id,
+                };
+
             },
         });
     },
@@ -113,4 +145,28 @@ export const linkDelete = extendType({
             }
         });
     }
+});
+
+
+export const LinkOrderByInput = inputObjectType({
+    name: "LinkOrderByInput",
+    definition(t) {
+        t.field("description", { type: Sort });
+        t.field("url", { type: Sort });
+        t.field("createdAt", { type: Sort });
+    },
+});
+
+export const Sort = enumType({
+    name: "Sort",
+    members: ["asc", "desc"],
+});
+
+export const Feed = objectType({
+    name: "Feed",
+    definition(t) {
+        t.nonNull.list.nonNull.field("links", { type: Link });
+        t.nonNull.int("count");
+        t.id("id");
+    },
 });

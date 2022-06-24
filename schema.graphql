@@ -7,12 +7,24 @@ type AuthPayload {
   user: User
 }
 
+type Feed {
+  count: Int!
+  id: ID
+  links: [Link!]!
+}
+
 type Link {
   description: String!
   id: Int!
   postedBy: User
   url: String!
   voters: [User!]!
+}
+
+input LinkOrderByInput {
+  createdAt: Sort
+  description: Sort
+  url: Sort
 }
 
 type Mutation {
@@ -25,7 +37,12 @@ type Mutation {
 }
 
 type Query {
-  feed: [Link!]!
+  feed(filter: String, orderBy: [LinkOrderByInput!], skip: Int, take: Int): Feed!
+}
+
+enum Sort {
+  asc
+  desc
 }
 
 type User {
