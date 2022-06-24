@@ -1,4 +1,4 @@
-name: hacker-news-clone-typescript                      # 1
+name: deploy-hackernews-app-heroku                       # 1
 
 on:
   push:
@@ -15,9 +15,9 @@ jobs:
       - name: Run production migration                   
         run: npm run migrate:deploy                      # 5     
         env:
-          DATABASE_URL: postgres://vouedgwozmdift:9d76ec5a44f1a22bdd95d133f8b4b06c9efa7144678a376a859b78b4f3eb42d6@ec2-52-22-136-117.compute-1.amazonaws.com:5432/dc0cs8vf1u9svd
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
       - uses: akhileshns/heroku-deploy@v3.12.12          # 6
         with:
-          heroku_api_key: 90e34b09-f742-47af-add9-1a69180d96fd
-          heroku_app_name: hacker-news-clone-typescript
-          heroku_email: varghese.noble230196@gmail.com
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
