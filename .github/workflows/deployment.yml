@@ -18,6 +18,6 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
       - uses: akhileshns/heroku-deploy@v3.12.12          # 6
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_api_key: "90e34b09-f742-47af-add9-1a69180d96fd"
+          heroku_app_name: 
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
