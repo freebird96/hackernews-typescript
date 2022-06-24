@@ -1,4 +1,4 @@
-name: deploy-hackernews-app-heroku                       # 1
+name: hacker-news-clone-typescript                      # 1
 
 on:
   push:
