@@ -1,13 +1,13 @@
-import { extendType, intArg, nonNull, objectType } from "nexus";
+import { objectType, extendType, nonNull, intArg } from "nexus";
+import { User } from "@prisma/client";
 
-export const Vote = objectType({
+export const Vote = objectType({ 
     name: "Vote",
     definition(t) {
         t.nonNull.field("link", { type: "Link" });
         t.nonNull.field("user", { type: "User" });
     },
 });
-
 
 export const VoteMutation = extendType({
     type: "Mutation",
@@ -21,12 +21,9 @@ export const VoteMutation = extendType({
                 const { userId } = context;
                 const { linkId } = args;
 
-                console.log('Hey...')
-
                 if (!userId) {  // 1 
                     throw new Error("Cannot vote without logging in.");
                 }
-                console.log(userId)
 
                 const link = await context.prisma.link.update({  // 2
                     where: {
@@ -48,8 +45,6 @@ export const VoteMutation = extendType({
                     user: user as User
                 };
             },
-        });
+        })
     }
-});
-
-
+})
